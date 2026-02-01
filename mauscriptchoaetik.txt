@@ -1,0 +1,118 @@
+-- ✅ MẪU CHUẨN CHO NGƯỜI MỚI | TÉO HUB 🍎
+-- Giữ nguyên giao diện thật, chỉ thêm hướng dẫn 👈 ngay bên cạnh dòng cần sửa
+
+repeat task.wait() until game:IsLoaded()
+
+-- 🟢 Nút mở menu chính
+local ScreenGui = Instance.new("ScreenGui")
+local ImageButton = Instance.new("ImageButton")
+local UICorner = Instance.new("UICorner")
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+ImageButton.Parent = ScreenGui
+ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton.BorderSizePixel = 0
+ImageButton.Position = UDim2.new(0.10615778, 0, 0.16217947, 0)
+ImageButton.Size = UDim2.new(0, 40, 0, 40)
+ImageButton.Draggable = true
+ImageButton.Image = "http://www.roblox.com/asset/?id=100721536888915"  -- 👈 đổi ID ảnh nút mở menu tại đây (ảnh roblox)
+
+UICorner.CornerRadius = UDim.new(1, 10)
+UICorner.Parent = ImageButton
+
+ImageButton.MouseButton1Down:Connect(function()
+	game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
+end)
+
+-- 🟣 Giao diện Fluent
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+repeat wait() until game:IsLoaded()
+
+-- 🪟 Cửa sổ chính
+local Window = Fluent:CreateWindow({
+	Title = "hanmaybay0 =}",         -- 👈 đổi thành tên script của bạn
+	SubTitle = "v1.0",              -- 👈 đổi mô tả phụ
+	TabWidth = 157,
+	Size = UDim2.fromOffset(450, 300),
+	Acrylic = Dark,
+	Theme = "Amethyst",                   -- 👈 đổi màu chủ đạo: Amethyst, Dark, Aqua, Light,...
+	MinimizeKey = Enum.KeyCode.End
+})
+
+-- 📑 Các tab (mục chính)
+local Tabs = {
+	Main0 = Window:AddTab({ Title = "farm lv" }),  -- 👈 đổi tên tab 1
+	Main1 = Window:AddTab({ Title = "sub farm" }),  -- 👈 đổi tên tab 2
+	Main2 = Window:AddTab({ Title = "player" }),     -- 👈 đổi tên tab 3
+	Main3 = Window:AddTab({ Title = "dungeon" }),        -- 👈 đổi tên tab 4
+	Main4 = Window:AddTab({ Title = "esp" }),    -- 👈 đổi tên tab 5
+	Main5 = Window:AddTab({ Title = "nâng tộc" }) -- 👈 đổi tên tab 6
+}
+
+------------------------------------------------
+-- TAB 1: hanmaybay0 
+------------------------------------------------
+Tabs.Main0:AddButton({
+	Title = "auto farm lv",              -- 👈 tên nút
+	Description = "v1",-- 👈 mô tả nút
+	Callback = function()
+		setclipboard("_G.AutoAttack = false
+
+Tabs.Main0:AddButton({
+    Title = "Auto Attack",
+    Description = "Tự đánh",
+    Callback = function()
+        _G.AutoAttack = not _G.AutoAttack
+    end
+})
+
+task.spawn(function()
+    while task.wait(0.2) do
+        if _G.AutoAttack then
+            local char = game.Players.LocalPlayer.Character
+            local tool = char and char:FindFirstChildOfClass("Tool")
+            if tool then
+                tool:Activate()
+            end
+        end
+    end
+end)")  -- 👈 link sao chép
+	end
+})
+
+
+
+Tabs.Main0:AddButton({
+    Title = "Auto Farm ON / OFF",
+    Description = "hanmaybay0 v1.0",
+    Callback = function()
+        getgenv().AutoFarm = not getgenv().AutoFarm
+    end
+})
+
+------------------------------------------------
+-- TAB 2: Ví dụ thêm script
+------------------------------------------------
+Tabs.Main1:AddButton({
+	
+
+getgenv().AutoFarm = false
+
+task.spawn(function()
+    while task.wait(0.2) do
+        if getgenv().AutoFarm then
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                local tool = char:FindFirstChildOfClass("Tool")
+                if tool then
+                    tool:Activate()
+                end
+            end
+        end
+    end
+end)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/hanmaybay0/main/Speed%20Hub%20X.lua", true))() -- 👈 link script tải
+	end
+})
