@@ -1,0 +1,131 @@
+-- hanmaybay0 v2 | REAL FIX LAG | STABLE
+
+pcall(function()
+    setfpscap(999)
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+end)
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+------------------------------------------------
+-- GIẢM ĐỒ HỌA TẬN GỐC
+------------------------------------------------
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 1e9
+Lighting.Brightness = 1
+
+for _,v in pairs(Lighting:GetChildren()) do
+    if v:IsA("PostEffect") then
+        v.Enabled = false
+    end
+end
+
+-- ÉP MAP NHẸ NHẤT
+for _,v in pairs(Workspace:GetDescendants()) do
+    if v:IsA("BasePart") then
+        v.Material = Enum.Material.Plastic
+        v.Reflectance = 0
+        v.CastShadow = false
+    elseif v:IsA("Decal") or v:IsA("Texture") then
+        v.Transparency = 1
+    end
+end
+
+------------------------------------------------
+-- ĐÓNG BĂNG HIỆU ỨNG (KHÔNG XOÁ)
+------------------------------------------------
+local function FixEffect(v)
+    if v:IsA("ParticleEmitter") then
+        v.Enabled = true
+        v.Rate = math.min(v.Rate, 1)
+        v.Speed = NumberRange.new(0)
+        v.Rotation = NumberRange.new(0)
+        v.RotSpeed = NumberRange.new(0)
+        v.Acceleration = Vector3.zero
+
+    elseif v:IsA("Beam") or v:IsA("Trail") then
+        v.Enabled = false
+
+    elseif v:IsA("Highlight") then
+        v.Enabled = false
+
+    elseif v:IsA("Explosion") then
+        v.Visible = false
+
+    -- FIX ÂM THANH (KHÔNG XOÁ)
+    elseif v:IsA("Sound") then
+        v.Volume = 0
+        v.PlaybackSpeed = 1
+        v.RollOffMaxDistance = 0
+    end
+end
+
+local function Apply(obj)
+    for _,v in pairs(obj:GetDescendants()) do
+        FixEffect(v)
+    end
+end
+
+Apply(Workspace)
+
+Workspace.DescendantAdded:Connect(function(v)
+    task.wait()
+    FixEffect(v)
+end)
+
+------------------------------------------------
+-- FIX RIÊNG PHẬT (XOÁ HÀO QUANG)
+------------------------------------------------
+task.spawn(function()
+    while task.wait(0.5) do
+        local char = LocalPlayer.Character
+        if char then
+            for _,v in pairs(char:GetDescendants()) do
+                if v.Name:lower():find("aura") or v:IsA("Highlight") then
+                    v:Destroy()
+                end
+            end
+        end
+    end
+end)
+
+------------------------------------------------
+-- FIX SKULL GUITAR / KIẾM / SÚNG
+------------------------------------------------
+RunService.Heartbeat:Connect(function()
+    local char = LocalPlayer.Character
+    if char then
+        for _,tool in pairs(char:GetChildren()) do
+            if tool:IsA("Tool") then
+                Apply(tool)
+            end
+        end
+    end
+end)
+
+------------------------------------------------
+-- XOÁ DEBRIS ĐÁ BAY
+------------------------------------------------
+Workspace.ChildAdded:Connect(function(v)
+    local n = v.Name:lower()
+    if n:find("rock") or n:find("debris") or n:find("ground") then
+        v:Destroy()
+    end
+end)
+
+------------------------------------------------
+-- XOÁ HIỆU ỨNG NƯỚC
+------------------------------------------------
+local t = Workspace:FindFirstChildOfClass("Terrain")
+if t then
+    t.WaterWaveSize = 0
+    t.WaterWaveSpeed = 0
+    t.WaterReflectance = 0
+    t.WaterTransparency = 1
+end
+
+print("✅ hanmaybay0 v2 | FIX LAG ỔN ĐỊNH | NO BUG SKILL")
