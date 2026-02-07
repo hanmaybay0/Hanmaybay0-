@@ -1,0 +1,98 @@
+--========================
+-- FIX LAG + REMOVE EFFECT + FPS
+--========================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local player = Players.LocalPlayer
+
+--========================
+-- FPS COUNTER
+--========================
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.Name = "FPS_GUI"
+
+local fpsLabel = Instance.new("TextLabel", ScreenGui)
+fpsLabel.Size = UDim2.new(0, 120, 0, 30)
+fpsLabel.Position = UDim2.new(0, 10, 0, 10)
+fpsLabel.BackgroundTransparency = 0.3
+fpsLabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
+fpsLabel.TextColor3 = Color3.fromRGB(0,255,0)
+fpsLabel.TextScaled = true
+fpsLabel.Font = Enum.Font.SourceSansBold
+fpsLabel.Text = "FPS: ..."
+
+local frames = 0
+local last = tick()
+
+RunService.RenderStepped:Connect(function()
+	frames += 1
+	if tick() - last >= 1 then
+		fpsLabel.Text = "FPS: "..frames
+		frames = 0
+		last = tick()
+	end
+end)
+
+--========================
+-- REMOVE EFFECT FUNCTION
+--========================
+local function clearEffects(obj)
+	for _,v in pairs(obj:GetDescendants()) do
+		if v:IsA("ParticleEmitter")
+		or v:IsA("Trail")
+		or v:IsA("Beam")
+		or v:IsA("Explosion")
+		or v:IsA("Fire")
+		or v:IsA("Smoke") then
+			v:Destroy()
+		end
+
+		-- Chặn animation / tween hiệu ứng
+		if v:IsA("AnimationController") or v:IsA("Animator") then
+			v:Destroy()
+		end
+	end
+end
+
+--========================
+-- APPLY TO WORKSPACE
+--========================
+clearEffects(workspace)
+
+workspace.DescendantAdded:Connect(function(v)
+	task.wait(0.05)
+	if v:IsA("ParticleEmitter")
+	or v:IsA("Trail")
+	or v:IsA("Beam")
+	or v:IsA("Explosion")
+	or v:IsA("Fire")
+	or v:IsA("Smoke") then
+		v:Destroy()
+	end
+end)
+
+--========================
+-- PLAYER EFFECT CLEAN
+--========================
+player.CharacterAdded:Connect(function(char)
+	task.wait(1)
+	clearEffects(char)
+end)
+
+if player.Character then
+	clearEffects(player.Character)
+end
+
+--========================
+-- LIGHTING SAFE (NO GRAPHIC DROP)
+--========================
+Lighting.Bloom.Enabled = false
+Lighting.SunRays.Enabled = false
+Lighting.DepthOfField.Enabled = false
+
+--========================
+-- DONE
+--========================
+print("✅ FIX LAG + REMOVE EFFECT + FPS READY")
